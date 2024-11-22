@@ -60,3 +60,25 @@ def plotCentroids(world_shape, yearly_centroids):
     plt.ylabel("Latitude")
     plt.legend(title="Year")
     plt.show()
+
+def getFirstSighting(df, species_id, latitudes, year_range, year_step, tracking_month):
+    if species_id:
+        species_data = df[df['SPECIES_ID'].isin(species_id)]    
+    else:
+        species_data = df
+    species_data['EVENT_DATE'] = pd.to_datetime(species_data['EVENT_DATE'], format='mixed', errors='coerce')    
+    species_data['DAY_OF_YEAR'] = species_data['EVENT_DATE'].dt.dayofyear
+    species_data['LAT_BAND'] = pd.cut(species_data['LAT_DD'], bins=latitudes, labels=latitudes[:-1])
+    species_data = species_data.dropna(subset=['LAT_BAND'])
+
+    year_lst = [y for y in range(year_range[0], year_range[1]+1, year_step)]
+    species_data = species_data[species_data['EVENT_YEAR'].isin(year_lst)]
+    species_data = species_data[species_data['EVENT_MONTH'] == tracking_month]
+
+    migration_timing = (
+        species_data.groupby(['EVENT_YEAR', 'LAT_BAND'])
+        .apply(lambda group: group.nsmallest(10, 'DAY_OF_YEAR')['DAY_OF_YEAR'].median())
+        .reset_index(name='MEDIAN_DAY_OF_YEAR')
+    )
+
+    return migration_timing
