@@ -1,6 +1,7 @@
 import pandas as pd
 import geopandas as gpd
 import matplotlib.pyplot as plt
+import calendar
 
 def getMonthLocationOverYears(df, species_id, tracking_month, year_range, year_step):
     '''
@@ -28,7 +29,7 @@ def getMonthLocationOverYears(df, species_id, tracking_month, year_range, year_s
     return month_migration
 
 
-def calcCentroidPerYear(month_migration):
+def calcCentroidPerMonthYear(month_migration):
     '''
     Calculates the centroid of flock of birds spotted over a month each year.
 
@@ -37,11 +38,11 @@ def calcCentroidPerYear(month_migration):
 
     Output :- filtered dataframe
     '''
-    yearly_centroids = (month_migration.groupby('MONTH_YEAR')[['EVENT_YEAR', 'LAT_DD', 'LON_DD']].mean().reset_index().sort_index())
-    return yearly_centroids
+    monthly_centroids = (month_migration.groupby('MONTH_YEAR')[['EVENT_YEAR', 'EVENT_MONTH', 'LAT_DD', 'LON_DD']].mean().reset_index().sort_index())
+    return monthly_centroids
 
 
-def plotCentroids(world_shape, yearly_centroids):
+def plotYearlyCentroids(world_shape, yearly_centroids):
     '''
     Plot yearly centroids on a base map.
 
@@ -60,7 +61,33 @@ def plotCentroids(world_shape, yearly_centroids):
     for index, centroid in yearly_centroids.iterrows():
         ax.scatter(centroid['LON_DD'], centroid['LAT_DD'], label=f"{int(centroid['EVENT_YEAR'])}", alpha=0.6)
 
-    plt.title(f"Yearly Centroids of Canada Goose Migration ({int(yearly_centroids['EVENT_YEAR'].min())}-{int(yearly_centroids['EVENT_YEAR'].max())})")
+    plt.title(f"Yearly Centroids of Bird Migration ({int(yearly_centroids['EVENT_YEAR'].min())}-{int(yearly_centroids['EVENT_YEAR'].max())})")
+    plt.xlabel("Longitude")
+    plt.ylabel("Latitude")
+    plt.legend(title="Year")
+    plt.show()
+
+
+def plotMonthlyCentroids(world_shape, monthly_centroids):
+    '''
+    Plot yearly centroids on a base map.
+
+    Inputs:
+    world_shape      :- Base map
+    monthly_centroids :- Dataframe of yearly centroids
+
+    Output :- None
+    '''
+    world = gpd.read_file(f"zip://{world_shape}")
+    world = world[world['CONTINENT'] == 'North America']
+    ax = world.plot(figsize=(15, 10), color='lightgrey')
+    # Superimpose bird sightings
+    ax.text(monthly_centroids['LON_DD'][0], monthly_centroids['LAT_DD'][0], f"{calendar.month_name[int(monthly_centroids['EVENT_MONTH'][0])]}", fontsize=10, color='green', fontweight='bold')
+    ax.text(monthly_centroids['LON_DD'].iloc[6], monthly_centroids['LAT_DD'].iloc[6], f"{calendar.month_name[int(monthly_centroids['EVENT_MONTH'][6])]}", fontsize=10, color='red', fontweight='bold')
+    for index, centroid in monthly_centroids.iterrows():
+        ax.scatter(centroid['LON_DD'], centroid['LAT_DD'], label=f"{calendar.month_name[int(centroid['EVENT_MONTH'])]}", alpha=0.6)
+
+    plt.title(f"Monthly Centroids of Bird Migration (Year: {int(monthly_centroids['EVENT_YEAR'].max())})")
     plt.xlabel("Longitude")
     plt.ylabel("Latitude")
     plt.legend(title="Year")
@@ -103,3 +130,16 @@ def getFirstSighting(df, species_id, latitudes, year_range, year_step, tracking_
     )
 
     return migration_timing
+
+def getMonthFromNum(m):
+    monthMap = {}
+    monthMap[1] = 'Jan'
+    monthMap[1] = 'Jan'
+    monthMap[1] = 'Jan'
+    monthMap[1] = 'Jan'
+    monthMap[1] = 'Jan'
+    monthMap[1] = 'Jan'
+    monthMap[1] = 'Jan'
+    monthMap[1] = 'Jan'
+    monthMap[1] = 'Jan'
+    monthMap[1] = 'Jan'
