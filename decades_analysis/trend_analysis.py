@@ -5,6 +5,8 @@ from sklearn.linear_model import LinearRegression
 def bird_data_read(path):
     '''
     read the bird dataset and return it
+    input：data file path
+    output: data
     '''
     bird_csv_path = path
     cols = ['EVENT_YEAR', 'EVENT_MONTH', 'ISO_COUNTRY', 'ISO_SUBDIVISION','LAT_DD','LON_DD']
@@ -19,6 +21,7 @@ def bird_data_read(path):
 def bird_data_plot(df):
     '''
     plot the bird dataset as latitude and longitude changes over dacades from 1960 to 2020
+    input: bird dataset
     '''
     df['LAT_DD'] = pd.to_numeric(df['LAT_DD'], errors='coerce')
     df['LON_DD'] = pd.to_numeric(df['LON_DD'], errors='coerce')
@@ -179,6 +182,7 @@ def relation():
 def preci_vs_location(df, monthly_avg_precip):
     '''
     figure out the possible relationship with temperature and bird location
+    input: datafile path of bird and given monthly average precipitation data
     '''
     bird_csv_path = './NABBP_2023_grp_02.csv'
     cols = ['EVENT_YEAR', 'EVENT_MONTH', 'ISO_COUNTRY', 'ISO_SUBDIVISION','LAT_DD','LON_DD']
