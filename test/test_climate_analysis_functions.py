@@ -1,4 +1,4 @@
-from climateAnalysis import bird_mov_map_gen, temp_heat_map_gen, stich_images_as_gif
+from ../climateAnalysis import bird_mov_map_gen, temp_heat_map_gen, stich_images_as_gif
 
 def main():
     #Input Parameters
