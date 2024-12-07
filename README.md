@@ -6,7 +6,8 @@ Bird Data
 https://www.sciencebase.gov/catalog/item/653fa806d34ee4b6e05bc57d
 
 Climate Data
-https://www.ncei.noaa.gov/products/weather-climate-models/north-american-regional
+https://www.ncei.noaa.gov/pub/data/cirs/climgrid/nclimgrid_tavg.nc
+Note: this dataset has NOT been pushed to github as the file size is too large. Please download this file to perform climate trend analyses.
 
 Climate Analysis Test Code:
 1. Generate Temp Heat Maps
